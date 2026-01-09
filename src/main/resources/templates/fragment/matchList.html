@@ -1,0 +1,41 @@
+<div xmlns:th="http://www.thymeleaf.org"
+     th:fragment="matchListFrag(dateList, matches)">
+
+    <!-- 📅 날짜 선택 영역 -->
+    <div id="date-buttons" class="date-box-container">
+        <button th:each="day : ${dateList}">
+            <a th:href="@{/(date=${day})}"
+               class="date-box"
+               th:classappend="${day.equals(selectedDate)} ? 'selected' : ''">
+                <div th:text="${day.dayOfMonth}">15</div>
+                <div th:text="${#temporals.format(day, 'E')}"
+                     th:classappend="${day.dayOfWeek.name() == 'SUNDAY'} ? ' sunday' :
+                               (${day.dayOfWeek.name() == 'SATURDAY'} ? ' saturday' : '')">
+                </div>
+            </a>
+        </button>
+    </div>
+
+    <!-- ⚽ 매치 리스트 영역 -->
+    <div style="margin-top: 32px; text-align: center;">
+        <h2 th:text="${#temporals.format(selectedDate, 'yyyy년 MM월 dd일')} + ' 매치 목록'"></h2>
+
+        <div class="match-list">
+            <div th:each="match : ${matches}" class="match-item">
+                <div class="match-time" th:text="${#temporals.format(match.startTime, 'HH:mm')}">10:00</div>
+
+                <div class="match-info">
+                    <div class="match-title"
+                         th:text="${match.stadiumDto.name + ' ' + match.stadiumCourtDto.name}">구장명</div>
+                    <div class="match-detail"
+                         th:text="${match.matchSex} + ' · ' + ${match.maxPeople} + 'vs' + ${match.maxPeople}">
+                        남녀모두 · 6vs6
+                    </div>
+                </div>
+
+                <div class="favorite-icon" onclick="toggleFavorite(this)">♡</div>
+            </div>
+        </div>
+    </div>
+
+</div>

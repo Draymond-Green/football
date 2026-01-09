@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+  <form th:action method="post">
+
+    <div th:if="${loginError}" th:text="${loginError}" class="error"></div>
+
+    <div>
+      <label for="loginId"> ID </label>
+      <input type="text"  id="loginId" name="loginId" class="form-control" placeholder="아이디">
+    </div>
+
+    <div>
+      <label for="password">Password</label>
+      <input type="text"  id="password" name="password" class="form-control" placeholder="비밀번호">
+    </div>
+
+    <button type="submit">로그인</button>
+  </form>
+</body>
+</html>

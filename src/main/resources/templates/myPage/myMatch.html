@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>나의 매치 내역</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <style>
+    body { font-family: sans-serif; margin: 0; padding: 0; background: #f9f9f9; }
+    .container { max-width: 1000px; margin: 2rem auto; background: white; padding: 2rem; }
+    .section-title { font-size: 1.5rem; margin-bottom: 1rem; }
+    .form-inline { display: flex; gap: 1rem; margin-bottom: 2rem; align-items: center; }
+    .form-inline input[type="date"], .form-inline input[type="month"] {
+        padding: 0.3rem; font-size: 1rem;
+    }
+    .match-card { border-top: 1px solid #ddd; padding: 1rem 0; }
+    .match-card:first-child { border-top: none; }
+    .match-date { color: #888; font-size: 0.9rem; }
+    .match-info { font-size: 1rem; margin-top: 0.5rem; }
+    .match-type { font-size: 0.85rem; color: #666; margin-top: 0.2rem; }
+    .badge { background: #eee; border-radius: 8px; padding: 0.2rem 0.5rem; font-size: 0.8rem; margin-left: 0.3rem; }
+    .cancelled { color: red; font-weight: bold; font-size: 0.9rem; }
+    .pagination { margin-top: 2rem; display: flex; justify-content: center; gap: 0.5rem; }
+    .pagination a, .pagination span {
+        padding: 0.4rem 0.8rem;
+        border: 1px solid #ccc;
+        text-decoration: none;
+        color: black;
+        border-radius: 4px;
+    }
+    .pagination .active {
+        background-color: #007bff;
+        color: white;
+        border-color: #007bff;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="section-title" th:text="${#temporals.format(#dates.createNow(), 'yyyy년 M월')}">2025년 6월</div>
+
+  <!-- ✅ 날짜 선택 폼 -->
+  <form method="get" th:action="@{/myPage/myMatch}" class="form-inline">
+    <label>날짜 선택:</label>
+    <input type="date" name="date"/>
+
+    <label>월 선택:</label>
+    <input type="month" name="month"/>
+
+    <button type="submit">조회</button>
+  </form>
+
+  <!-- ✅ 매치 내역 -->
+  <div th:if="${#lists.isEmpty(matches)}">
+    <p>조회된 매치가 없습니다.</p>
+  </div>
+
+  <div th:each="match : ${matches}" class="match-card">
+    <div class="match-date">
+      <span th:text="${match.date} + ' ' + ${match.startTime} + ' ~ ' + ${match.endTime}"></span>
+    </div>
+    <div class="match-info">
+      <strong th:text="${match.stadiumDto.name} + ' ' + ${match.stadiumCourtDto.name}">구장 이름</strong>
+      <span class="badge" th:text="${match.matchType}">8vs8</span>
+      <span class="badge" th:text="${match.matchSex}">남성</span>
+    </div>
+    <div class="match-type">
+      <span th:if="${match.manager != null}" th:text="'주최자: ' + ${match.manager.name}">주최자 이름</span>
+    </div>
+
+    <!-- ✅ 사용자가 신청했다가 취소한 경우 -->
+    <div th:if="${match.canceledByUser}" class="cancelled">
+      ※ 신청을 취소한 매치입니다
+    </div>
+  </div>
+
+  <!-- ✅ 페이징 -->
+  <div class="pagination" th:if="${matchesPage != null}">
+    <a th:if="${matchesPage.hasPrevious()}" th:href="@{/myPage/myMatch(page=${matchesPage.number - 1})}">이전</a>
+
+    <span th:each="i : ${#numbers.sequence(0, matchesPage.totalPages - 1)}"
+          th:classappend="${matchesPage.number == i} ? 'active'"
+          th:text="${i + 1}"
+          th:href="@{/myPage/myMatch(page=${i})}"
+          th:utext="'<a href=\'/myPage/myMatch?page=' + i + '\'>' + (i + 1) + '</a>'">
+        </span>
+
+    <a th:if="${matchesPage.hasNext()}" th:href="@{/myPage/myMatch(page=${matchesPage.number + 1})}">다음</a>
+  </div>
+</div>
+
+</body>
+</html>

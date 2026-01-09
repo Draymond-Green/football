@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Match Detail</title>
+    <link rel="stylesheet" th:href="@{/css/match.css}">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ✅ 상단 이미지 -->
+    <section class="match-image-section">
+        <img th:src="@{/images/default-stadium.jpg}" alt="Match Image" class="match-image">
+    </section>
+
+    <!-- ✅ 매치 요약 정보 -->
+    <section class="match-summary-section">
+        <h2 th:text="${totalMatch.matchDto.start}">2025-11-04 20:00</h2>
+        <h3 th:text="${totalMatch.stadiumDto.name}">경기장 이름</h3>
+        <p th:text="${totalMatch.stadiumCourtDto.name}">B코트</p>
+    </section>
+
+    <!-- ✅ 매치 정보 -->
+    <section class="match-info-section">
+        <h3>매치 정보</h3>
+        <ul>
+            <li>
+                레벨:
+                <span th:text="${totalMatch.matchDto.matchLevel}">아마추어</span>
+            </li>
+            <li>
+                성별:
+                <span th:text="${totalMatch.matchDto.matchSex}">남녀모두</span>
+            </li>
+            <li>
+                팀 구성:
+                <span th:text="${totalMatch.matchDto.matchTeamSize}">6vs6</span>
+            </li>
+            <li>
+                인원 수:
+                <span th:text="${totalMatch.matchDto.playerCount}">18명</span>
+            </li>
+            <li>
+                매니저:
+                <span th:text="${totalMatch.matchDto.managerName}">홍길동</span>
+            </li>
+        </ul>
+    </section>
+
+    <!-- ✅ 매치 데이터 영역 -->
+    <section class="match-data-section">
+        <h3>매치 데이터</h3>
+        <!-- 이후 레벨 비율 차트 추가 예정 -->
+        <p>레벨 분포 및 데이터 영역</p>
+    </section>
+
+    <!-- ✅ 구장 정보 -->
+    <section class="stadium-info-section">
+        <h3>구장 정보</h3>
+        <p th:text="${totalMatch.stadiumDto.address.fullAddress}">주소 출력</p>
+
+        <ul>
+            <li>샤워실: <span th:text="${totalMatch.stadiumDto.isShowerRoomPresent} ? 'O' : 'X'"></span></li>
+            <li>주차: <span th:text="${totalMatch.stadiumDto.isFreeParking} ? '무료' : '유료'"></span></li>
+            <li>풋살화 대여:
+                <span th:text="${totalMatch.stadiumDto.isFutsalShoeRentalAvailable} ? '가능' : '불가'"></span>
+            </li>
+            <li>음료 판매:
+                <span th:text="${totalMatch.stadiumDto.isSellingDrink} ? '판매' : '미판매'"></span>
+            </li>
+            <li>화장실:
+                <span th:text="${totalMatch.stadiumDto.isToiletAvailable} ? '있음' : '없음'"></span>
+            </li>
+        </ul>
+    </section>
+
+    <!-- ✅ 신청하기 -->
+    <section class="apply-section">
+        <h3 th:text="${#numbers.formatInteger(totalMatch.matchDto.price, 3, 'COMMA')} + '원'">10,000원</h3>
+        <button>신청하기</button>
+    </section>
+
+</div>
+
+</body>
+</html>
